@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
@@ -64,12 +65,16 @@ class MyHomePageState extends State<MyHomePage> {
       response = await dio.download(pdfURL, savePath,
           onReceiveProgress: onReceiveProgress);
     } catch (ex) {
-      debugPrint('Erro--> ${ex.toString()}');
+      debugPrint('Error--> ${ex.toString()}');
     } finally {
       response!.statusCode == 200
           ? debugPrint(
               'File has been downloaded successfully! \nSavedPath$savePath}')
           : debugPrint('There was an error while downloading the file.');
+
+      if (response.statusCode == 200) {
+        OpenFile.open(savePath);
+      }
     }
   }
 
